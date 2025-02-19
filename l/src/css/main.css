@@ -1,0 +1,372 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: url('/image.png') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.setup-panel {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    border: 1px solid #eee;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+    text-shadow: none;
+    letter-spacing: 1px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 500;
+    text-shadow: none;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    color: #333;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+input[type="number"]:focus {
+    outline: none;
+    background: white;
+    border-color: #6b8cff;
+    box-shadow: 0 0 10px rgba(107, 140, 255, 0.2);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #6b8cff, #4466ee);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(107, 140, 255, 0.3);
+}
+
+button:hover {
+    background: linear-gradient(135deg, #7b9dff, #5577ff);
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(107, 140, 255, 0.5);
+}
+
+.simulation-area {
+    width: 100%;
+    flex-grow: 1;
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+    min-height: 600px;
+    border: 1px solid #eee;
+    position: relative;
+    overflow-y: hidden;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+#building {
+    position: relative;
+    height: 100%;
+    display: block;
+    padding: 0 20px;
+}
+
+.floor {
+    position: absolute;
+    width: 100%;
+    height: 100px;
+    border-bottom: 2px solid #eee;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    left: 0;
+    right: 0;
+    background: white;
+    z-index: 1;
+    justify-content: flex-start;
+    gap: 50px;
+}
+
+.floor-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.floor-number {
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: underline;
+    text-shadow: none;
+}
+
+.lift-shaft {
+    width: 80px;
+    height: 100px;
+    position: relative;
+    z-index: 0;
+}
+
+.lift {
+    width: 70px;
+    height: 90px;
+    background: #e0e0e0;
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    transition: transform 0.5s linear;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    z-index: 2;
+}
+
+.lift-door {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background: #d0d0d0;
+    transition: transform 2.5s;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.lift-door.left {
+    left: 0;
+    transform-origin: left;
+    border-right: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.lift-door.right {
+    right: 0;
+    transform-origin: right;
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.lift.door-open .lift-door.left {
+    transform: rotateY(90deg);
+}
+
+.lift.door-open .lift-door.right {
+    transform: rotateY(-90deg);
+}
+
+.floor-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-left: 20px;
+}
+
+.floor-button {
+    width: 60px;
+    height: 25px;
+    padding: 0;
+    background: white;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    border-radius: 0;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.floor-button:hover {
+    background: #f5f5f5;
+    transform: translateY(-1px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+}
+
+.floor-button.active {
+    background: #6b8cff;
+    border: 1px solid #5577ff;
+    animation: buttonPulse 2s infinite;
+    color: white;
+    font-weight: bold;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(107, 140, 255, 0.3);
+}
+
+/* Remove animation when lift reaches */
+.floor-button.reached {
+    animation: none;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-weight: normal;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+/* Remove the starTwinkle animation and setup-panel::before */
+.setup-panel::before {
+    display: none;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .setup-panel {
+        width: 100%;
+        position: static;
+        margin-bottom: 10px;
+    }
+    
+    .simulation-area {
+        min-height: 400px;
+        padding: 15px;
+    }
+    
+    .floor {
+        padding: 0 10px;
+        gap: 20px;
+    }
+    
+    .lift-shaft {
+        width: 60px;
+    }
+    
+    .lift {
+        width: 50px;
+        height: 80px;
+    }
+    
+    .floor-button {
+        width: 50px;
+        height: 22px;
+        font-size: 11px;
+    }
+    
+    .floor-number {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .setup-panel {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 20px;
+    }
+    
+    .lift-shaft {
+        width: 50px;
+    }
+    
+    .lift {
+        width: 40px;
+        height: 70px;
+    }
+}
+
+/* Add lift status indicators */
+.lift::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4CAF50;
+    transition: background-color 0.3s;
+}
+
+.lift[data-status="moving"]::after {
+    background: #FFC107;
+}
+
+.lift[data-status="busy"]::after {
+    background: #F44336;
+}
+
+/* Enhance button feedback */
+@keyframes buttonPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(107, 140, 255, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(107, 140, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(107, 140, 255, 0);
+    }
+}
+
+.floor-button.active {
+    background: #6b8cff;
+    border: 1px solid #5577ff;
+    animation: buttonPulse 2s infinite;
+    color: white;
+    font-weight: bold;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(107, 140, 255, 0.3);
+}
+
+/* Add smooth scrolling for better mobile experience */
+.simulation-area {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
