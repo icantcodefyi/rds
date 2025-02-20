@@ -3,6 +3,7 @@ class LiftSystem {
         this.floors = 0;
         this.lifts = [];
         this.requests = new Map();
+        this.assignedRequests = new Map();
         this.initialize();
     }
 
@@ -132,7 +133,10 @@ class LiftSystem {
     }
 
     handleLiftRequest(floor, direction, clickedButton) {
-        // Prevent multiple requests for the same floor and direction
+        if (this.assignedRequests.has(`${floor}-${direction}`)) {
+            return;
+        }
+
         if (this.requests.has(floor) && this.requests.get(floor).has(direction)) {
             return;
         }
@@ -145,7 +149,6 @@ class LiftSystem {
         const buttonDirection = clickedButton.textContent === '▲' ? 'up' : 'down';
         if (buttonDirection === direction) {
             clickedButton.classList.add('active');
-            // Disable the button temporarily
             clickedButton.disabled = true;
         }
         
@@ -159,9 +162,19 @@ class LiftSystem {
         if (idleLifts.length === 0) return;
 
         for (const [floor, directions] of this.requests) {
-            const nearestLift = this.findNearestAvailableLift(floor, Array.from(directions)[0]);
-            if (nearestLift) {
-                await this.dispatchLift(nearestLift, floor, Array.from(directions)[0]);
+            for (const direction of directions) {
+                const requestKey = `${floor}-${direction}`;
+                
+                if (this.assignedRequests.has(requestKey)) {
+                    continue;
+                }
+
+                const nearestLift = this.findNearestAvailableLift(floor, direction);
+                if (nearestLift) {
+                    this.assignedRequests.set(requestKey, nearestLift.id);
+                    await this.dispatchLift(nearestLift, floor, direction);
+                    this.assignedRequests.delete(requestKey);
+                }
             }
         }
     }
@@ -204,7 +217,6 @@ class LiftSystem {
                 if (parseInt(button.dataset.floor) === targetFloor && 
                     button.dataset.direction === direction) {
                     button.classList.remove('active');
-                    // Re-enable the button after the lift arrives
                     button.disabled = false;
                 }
             });
