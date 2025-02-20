@@ -15,9 +15,21 @@ class LiftSystem {
         const floorsInput = document.getElementById('floors');
         const liftsInput = document.getElementById('lifts');
         
-        this.floors = parseInt(floorsInput.value);
+        const floors = parseInt(floorsInput.value);
         const numLifts = parseInt(liftsInput.value);
         
+        // Input validation
+        if (isNaN(floors)) {
+            alert('Please enter a valid number of floors');
+            return;
+        }
+        
+        if (isNaN(numLifts)) {
+            alert('Please enter a valid number of lifts');
+            return;
+        }
+        
+        this.floors = floors;
         this.requests.clear();
         this.lifts = [];
         
@@ -120,6 +132,11 @@ class LiftSystem {
     }
 
     handleLiftRequest(floor, direction, clickedButton) {
+        // Prevent multiple requests for the same floor and direction
+        if (this.requests.has(floor) && this.requests.get(floor).has(direction)) {
+            return;
+        }
+
         if (!this.requests.has(floor)) {
             this.requests.set(floor, new Set());
         }
@@ -128,6 +145,8 @@ class LiftSystem {
         const buttonDirection = clickedButton.textContent === '▲' ? 'up' : 'down';
         if (buttonDirection === direction) {
             clickedButton.classList.add('active');
+            // Disable the button temporarily
+            clickedButton.disabled = true;
         }
         
         this.processRequests();
@@ -185,6 +204,8 @@ class LiftSystem {
                 if (parseInt(button.dataset.floor) === targetFloor && 
                     button.dataset.direction === direction) {
                     button.classList.remove('active');
+                    // Re-enable the button after the lift arrives
+                    button.disabled = false;
                 }
             });
         }
@@ -199,8 +220,6 @@ class LiftSystem {
         lift.element.dataset.status = 'idle';
         lift.direction = null;
         lift.targetFloor = null;
-
-        this.processRequests();
     }
 
     async moveLift(lift, targetFloor) {
