@@ -19,14 +19,23 @@ class LiftSystem {
         const floors = parseInt(floorsInput.value);
         const numLifts = parseInt(liftsInput.value);
         
-        // Input validation
         if (isNaN(floors)) {
             alert('Please enter a valid number of floors');
+            return;
+        }
+
+        if (floors <= 0) {
+            alert('Please enter a number of floors greater than 0');
             return;
         }
         
         if (isNaN(numLifts)) {
             alert('Please enter a valid number of lifts');
+            return;
+        }
+        
+        if (numLifts <= 0) {
+            alert('Please enter a number of lifts greater than 0');
             return;
         }
         
