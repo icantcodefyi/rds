@@ -69,14 +69,19 @@ class LiftSystem {
             const buttons = document.createElement('div');
             buttons.className = 'floor-buttons';
             
-            if (i < this.floors - 1) {
+            if (this.floors === 1) {
                 const upButton = this.createButton('▲', i, 'up');
                 buttons.appendChild(upButton);
-            }
-            
-            if (i > 0) {
-                const downButton = this.createButton('▼', i, 'down');
-                buttons.appendChild(downButton);
+            } else {
+                if (i < this.floors - 1) {
+                    const upButton = this.createButton('▲', i, 'up');
+                    buttons.appendChild(upButton);
+                }
+                
+                if (i > 0) {
+                    const downButton = this.createButton('▼', i, 'down');
+                    buttons.appendChild(downButton);
+                }
             }
             
             floorSection.appendChild(buttons);
